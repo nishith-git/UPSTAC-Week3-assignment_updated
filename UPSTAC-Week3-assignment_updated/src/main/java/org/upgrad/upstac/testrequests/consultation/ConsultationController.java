@@ -10,10 +10,12 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 import org.upgrad.upstac.config.security.UserLoggedInService;
 import org.upgrad.upstac.exception.AppException;
+import org.upgrad.upstac.testrequests.RequestStatus;
 import org.upgrad.upstac.testrequests.TestRequest;
 import org.upgrad.upstac.testrequests.TestRequestQueryService;
 import org.upgrad.upstac.testrequests.TestRequestUpdateService;
 import org.upgrad.upstac.testrequests.flow.TestRequestFlowService;
+import org.upgrad.upstac.users.User;
 
 import javax.validation.ConstraintViolationException;
 import java.util.List;
@@ -50,6 +52,7 @@ public class ConsultationController {
     @PreAuthorize("hasAnyRole('DOCTOR')")
     public List<TestRequest> getForConsultations()  {
 
+        return testRequestQueryService.findBy(RequestStatus.LAB_TEST_COMPLETED);
         // Implement this method
 
 
@@ -59,7 +62,9 @@ public class ConsultationController {
         // For reference check the method getForTests() method from LabRequestController class
 
         // replace this line of code with your implementation
-        return  testRequestQueryService.findBy(RequestStatus.LAB_TEST_COMPLETED);
+        //throw new ResponseStatusException(HttpStatus.NOT_IMPLEMENTED,"Not implemented");
+
+
 
 
     }
@@ -76,9 +81,11 @@ public class ConsultationController {
         // For reference check the method getForTests() method from LabRequestController class
 
         // replace this line of code with your implementation
-        throw new ResponseStatusException(HttpStatus.NOT_IMPLEMENTED,"Not implemented");
+        //throw new ResponseStatusException(HttpStatus.NOT_IMPLEMENTED,"Not implemented");
 
-
+        User user = userLoggedInService.getLoggedInUser();
+        return testRequestQueryService.findByDoctor(user);
+        // git repository created//
 
 
     }
@@ -96,9 +103,15 @@ public class ConsultationController {
         //Create an object of TestRequest class and use the assignForConsultation() method of testRequestUpdateService to assign the particular id to the current user
         // return the above created object
         // For reference check the method assignForLabTest() method from LabRequestController class
+
+
+
         try {
             // replace this line of code with your implementation
-            throw new ResponseStatusException(HttpStatus.NOT_IMPLEMENTED,"Not implemented");
+            //throw new ResponseStatusException(HttpStatus.NOT_IMPLEMENTED,"Not implemented");
+            User user = userLoggedInService.getLoggedInUser();
+            return testRequestUpdateService.assignForConsultation(id,user);
+
 
         }catch (AppException e) {
             throw asBadRequest(e.getMessage());
@@ -121,7 +134,9 @@ public class ConsultationController {
 
         try {
             // replace this line of code with your implementation
-            throw new ResponseStatusException(HttpStatus.NOT_IMPLEMENTED,"Not implemented");
+            //throw new ResponseStatusException(HttpStatus.NOT_IMPLEMENTED,"Not implemented");
+            User user = userLoggedInService.getLoggedInUser();
+            return testRequestUpdateService.updateConsultation(id,testResult,user);
 
 
         } catch (ConstraintViolationException e) {
